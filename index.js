@@ -12,5 +12,155 @@ app.listen (port, () => {
     // para que sea mucho mas facil a la hora de compartir el proyecto con otra persona.
 });
 
+/* TEMA PRINCIPAL DEL PROYECTO: Concesionario de Audi de 2026 */
+// A continuacion voy a introducir los arrays con los modelos de los coches y 9 campos para cada uno
+
+const coches = [
+    {
+        id: 1,
+        modelo: "Audi A3 Sportback",
+        carroceria: "Compacto",
+        motor: "1.5 TFSI",
+        potencia_cv: 150,
+        precio_euros: 33900,
+        traccion: "FWD",
+        electrificacion: "MHEV",
+        autonomia_km: 0
+    },
+    {
+        id: 2,
+        modelo: "Audi A5 Sportback",
+        carroceria: "Fastback",
+        motor: "2.0 TFSI",
+        potencia_cv: 204,
+        precio_euros: 48500,
+        traccion: "FWD",
+        electrificacion: "MHEV",
+        autonomia_km: 0
+    },
+    {
+        id: 3,
+        modelo: "Audi A6 Sedan",
+        carroceria: "Sedán",
+        motor: "2.0 TFSI",
+        potencia_cv: 204,
+        precio_euros: 56200,
+        traccion: "FWD",
+        electrificacion: "MHEV",
+        autonomia_km: 0
+    },
+    {
+        id: 4,
+        modelo: "Audi A8 L",
+        carroceria: "Sedán",
+        motor: "3.0 TFSI",
+        potencia_cv: 340,
+        precio_euros: 115000,
+        traccion: "quattro",
+        electrificacion: "MHEV",
+        autonomia_km: 0
+    },
+    {
+        id: 5,
+        modelo: "Audi Q3",
+        carroceria: "SUV",
+        motor: "1.5 TFSI",
+        potencia_cv: 150,
+        precio_euros: 37900,
+        traccion: "FWD",
+        electrificacion: "MHEV",
+        autonomia_km: 0
+    },
+    {
+        id: 6,
+        modelo: "Audi Q4 e-tron",
+        carroceria: "SUV",
+        motor: "Electrico 82 kWh",
+        potencia_cv: 286,
+        precio_euros: 52400,
+        traccion: "quattro",
+        electrificacion: "BEV",
+        autonomia_km: 530
+    },
+    {
+        id: 7,
+        modelo: "Audi Q5",
+        carroceria: "SUV",
+        motor: "2.0 TFSI",
+        potencia_cv: 204,
+        precio_euros: 58700,
+        traccion: "quattro",
+        electrificacion: "PHEV",
+        autonomia_km: 80
+    },
+    {
+        id: 8,
+        modelo: "Audi Q6 e-tron",
+        carroceria: "SUV",
+        motor: "Electrico 100 kWh",
+        potencia_cv: 387,
+        precio_euros: 75000,
+        traccion: "quattro",
+        electrificacion: "BEV",
+        autonomia_km: 625
+    },
+    {
+        id: 9,
+        modelo: "Audi Q7",
+        carroceria: "SUV 7 plazas",
+        motor: "3.0 TDI",
+        potencia_cv: 231,
+        precio_euros: 82000,
+        traccion: "quattro",
+        electrificacion: "MHEV",
+        autonomia_km: 0
+    },
+    {
+        id: 10,
+        modelo: "Audi e-tron GT",
+        carroceria: "Gran Turismo",
+        motor: "Electrico 93 kWh",
+        potencia_cv: 476,
+        precio_euros: 109000,
+        traccion: "quattro",
+        electrificacion: "BEV",
+        autonomia_km: 488
+    },
+    {
+        id: 11,
+        modelo: "Audi RS3 Sportback",
+        carroceria: "Compacto",
+        motor: "2.5 TFSI",
+        potencia_cv: 407,
+        precio_euros: 72900,
+        traccion: "quattro",
+        electrificacion: "ninguna",
+        autonomia_km: 0
+    },
+    {
+        id: 12,
+        modelo: "Audi RS5 Sportback",
+        carroceria: "Fastback",
+        motor: "2.9 TFSI",
+        potencia_cv: 450,
+        precio_euros: 96500,
+        traccion: "quattro",
+        electrificacion: "ninguna",
+        autonomia_km: 0
+    },
+    {
+        id: 13,
+        modelo: "Audi RS6 Avant",
+        carroceria: "Familiar",
+        motor: "4.0 TFSI",
+        potencia_cv: 630,
+        precio_euros: 142000,
+        traccion: "quattro",
+        electrificacion: "MHEV",
+        autonomia_km: 0
+    }
+];
+
+
 
 
