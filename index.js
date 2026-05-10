@@ -12,8 +12,8 @@ app.listen (port, () => {
     // para que sea mucho mas facil a la hora de compartir el proyecto con otra persona.
 });
 
-/* TEMA PRINCIPAL DEL PROYECTO: Concesionario de Audi de 2026 */
-// A continuacion voy a introducir los arrays con los modelos de los coches y 9 campos para cada uno
+/* TEMA PRINCIPAL DEL PROYECTO: Lista de coches Audi 2026 */
+// A continuacion voy a introducir en el array con los modelos de los coches y 9 campos para cada uno
 
 const coches = [
     {
