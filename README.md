@@ -103,6 +103,18 @@ Cada modificación está vinculada a un coche por `coche_id`.
 
 ## Endpoints
 
+### Coches *(recurso principal)*
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/coches` | Devuelve todos los coches |
+| GET | `/coches/traccion/:traccion` | **[EXTRA]** Filtra coches por tracción |
+| GET | `/coches/:id` | Devuelve un coche por su id |
+| GET | `/coches/buscar?modelo=X` | Busca un coche por nombre |
+| POST | `/coches` | Crea un nuevo coche |
+| PUT | `/coches/:id` | Modifica un coche existente |
+| DELETE | `/coches/:id` | Elimina un coche |
+
 > En desarrollo.
 
 ---
