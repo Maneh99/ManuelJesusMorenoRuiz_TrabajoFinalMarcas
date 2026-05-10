@@ -1,0 +1,27 @@
+{
+  "name": "manueljesusmorenoruiz_trabajofinalmarcas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "//Asi tengo que comentar ": "Modo desarrollador para que al iniciarlo tan solo con npm run dev y que arranque el proyecto en modo dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maneh99/ManuelJesusMorenoRuiz_TrabajoFinalMarcas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Maneh99/ManuelJesusMorenoRuiz_TrabajoFinalMarcas/issues"
+  },
+  "homepage": "https://github.com/Maneh99/ManuelJesusMorenoRuiz_TrabajoFinalMarcas#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
