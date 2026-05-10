@@ -15,6 +15,7 @@ app.listen (port, () => {
 /* TEMA PRINCIPAL DEL PROYECTO: Lista de coches Audi 2026 */
 // A continuacion voy a introducir en el array con los modelos de los coches y 9 campos para cada uno
 
+// Recurso Principal
 const coches = [
     {
         id: 1,
@@ -161,6 +162,94 @@ const coches = [
     }
 ];
 
+
+// Recurso secundario
+const modificaciones = [
+    {
+        id: 1, // id unico de la modificaion 
+        coche_id: 1, // Referencia del coche de la lista de los coches
+        autor: "Carlos M.",
+        taller: "TuningPro Sevilla",
+        potencia_original_cv: 150,
+        potencia_modificada_cv: 185,
+        caballos_ganados: 35,
+        tipo_modificacion: "Reprogramacion ECU",
+        comentario: "El coche ha ganado mucha agilidad, merece la pena totalmente",
+        fecha: "2026-01-10"
+    },
+    {
+        id: 2,
+        coche_id: 11,
+        autor: "Javier R.",
+        taller: "RS Garage Madrid",
+        potencia_original_cv: 407,
+        potencia_modificada_cv: 480,
+        caballos_ganados: 73,
+        tipo_modificacion: "Stage 2 + escape deportivo",
+        comentario: "El RS3 ya era bestia, ahora es otro nivel completamente diferente",
+        fecha: "2026-02-03"
+    },
+    {
+        id: 3,
+        coche_id: 13,
+        autor: "Miguel A.",
+        taller: "ABT Andalucía",
+        potencia_original_cv: 630,
+        potencia_modificada_cv: 720,
+        caballos_ganados: 90,
+        tipo_modificacion: "Kit ABT Stage 3",
+        comentario: "El RS6 con 720cv es una locura, imposible notarlo en carretera",
+        fecha: "2026-02-20"
+    },
+    {
+        id: 4,
+        coche_id: 12,
+        autor: "Antonio L.",
+        taller: "TuningPro Sevilla",
+        potencia_original_cv: 450,
+        potencia_modificada_cv: 530,
+        caballos_ganados: 80,
+        tipo_modificacion: "Reprogramación ECU + intercooler",
+        comentario: "El RS5 ya tiraba fuerte, con el Stage 2 es una auténtica bestia",
+        fecha: "2026-03-05"
+    },
+    {
+        id: 5,
+        coche_id: 7,
+        autor: "Pedro S.",
+        taller: "EcoTune Barcelona",
+        potencia_original_cv: 204,
+        potencia_modificada_cv: 245,
+        caballos_ganados: 41,
+        tipo_modificacion: "Reprogramación ECU",
+        comentario: "Para ser un SUV familiar el resultado es sorprendente",
+        fecha: "2026-03-18"
+    },
+    {
+        id: 6,
+        coche_id: 11,
+        autor: "Raúl T.",
+        taller: "RS Garage Madrid",
+        potencia_original_cv: 407,
+        potencia_modificada_cv: 460,
+        caballos_ganados: 53,
+        tipo_modificacion: "Stage 1",
+        comentario: "Solo Stage 1 y ya se nota una barbaridad en aceleración",
+        fecha: "2026-04-01"
+    },
+    {
+        id: 7, 
+        coche_id: 3,
+        autor: "Sergio F.",
+        taller: "AutoChip Valencia",
+        potencia_original_cv: 204,
+        potencia_modificada_cv: 240,
+        caballos_ganados: 36,
+        tipo_modificacion: "Reprogramación ECU",
+        comentario: "Perfecto para un ejecutivo que quiere algo más de punch",
+        fecha: "2026-04-15"
+    }
+];
 
 
 
