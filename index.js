@@ -3,10 +3,13 @@ const express = require ('express'); // Importamos express para poder crear el s
 const app = express(); // guardamos express en una constante la que llamamos app.
 const port = 3125; // Puerto que he definido para el proyecto.
 
+
 app.use(express.json()); // Esto es para que el servidor pueda leer los datos que le vamos a enviar con el formato .json
+
 
 /* TEMA PRINCIPAL DEL PROYECTO: Lista de coches Audi 2026 */
 // A continuacion voy a introducir en el array con los modelos de los coches y 9 campos para cada uno.
+
 
 /* DATOS */
 // Recurso Principal.
@@ -156,11 +159,12 @@ const coches = [
     }
 ];
 
+
 // Recurso secundario
 const modificaciones = [
     {
-        id: 1, // id unico de la modificaion .
-        coche_id: 1, // Referencia del coche de la lista de los coches.
+        id: 1,
+        coche_id: 1,
         autor: "Carlos M.",
         taller: "TuningPro Sevilla",
         potencia_original_cv: 150,
@@ -231,7 +235,7 @@ const modificaciones = [
         fecha: "2026-04-01"
     },
     {
-        id: 7, 
+        id: 7,
         coche_id: 3,
         autor: "Sergio F.",
         taller: "AutoChip Valencia",
@@ -245,6 +249,7 @@ const modificaciones = [
 ];
 
 
+
 /* ENDPOINTS Coches */
 /* Get /coches */
 // Este get va a devolver todos los coches del array.
@@ -252,10 +257,56 @@ app.get('/coches', (req, res) => {
     res.status(200).json(coches);
 });
 
+
+/* ENDPOINTS Filtros y busquedas */
+/* Get /coches/filtrar */
+// Vamos a filtrar coches por varios campos a la vez usando query params porq los filtros son opcionales 
+// Los query params son perfectos para filtrar por varias cosas ya que esto no forma parte de la identidad del recurso, solo son opciones extra de la busqueda.
+app.get('/coches/filtrar', (req, res) => {
+    // Recogemos todos los posibles filtros que puede enviar el usuario
+    const { carroceria, precio_min, precio_max, traccion, electrificacion, ordenar, orden } = req.query;
+    // Empezamos con una copia de todos los coches, [...coches] hace una copia para no modificar el array original
+    let resultado = [...coches];
+    // Si viene el filtro de carroceria, filtramos por ese campo. .includes() permite busqueda parcial: "SU" tambien encuentra "SUV"
+    if (carroceria) {
+        resultado = resultado.filter(c => c.carroceria.toLowerCase().includes(carroceria.toLowerCase()));
+    }
+    // Si viene precio_min, nos quedamos solo con los coches mas caros que ese precio
+    if (precio_min) {
+        resultado = resultado.filter(c => c.precio_euros >= Number(precio_min));
+    }
+    // Si viene precio_max, nos quedamos solo con los coches mas baratos que ese precio
+    if (precio_max) {
+        resultado = resultado.filter(c => c.precio_euros <= Number(precio_max));
+    }
+    // Si viene traccion, filtramos por ese campo exacto
+    if (traccion) {
+        resultado = resultado.filter(c => c.traccion.toLowerCase() === traccion.toLowerCase());
+    }
+    // Si viene electrificacion, filtramos por ese campo exacto
+    if (electrificacion) {
+        resultado = resultado.filter(c => c.electrificacion.toLowerCase() === electrificacion.toLowerCase());
+    }
+    // Si viene el campo por el que ordenar, ordenamos el resultado, si orden es descendente ordenamos de mayor a menor, si no de menor a mayor
+    if (ordenar) {
+        resultado.sort((a, b) => {
+            if (orden === 'desc') return b[ordenar] - a[ordenar];
+            return a[ordenar] - b[ordenar];
+        });
+    }
+    // Si despues de aplicar todos los filtros no queda ningun coche, devolvemos 404
+    if (resultado.length === 0) {
+        return res.status(404).json({ error: 'No se encontraron coches con esos filtros' });
+    }
+    // Esto significa que esta todo OK y le devuelve el resultado
+    res.status(200).json(resultado);
+});
+
+/* ENDPOINTS Coches */
 /* EXTRA Get /coches/traccion/:traccion */
 // Filtra y devuelve todos los coches segun el tipo de traccion que elijamos 
 // Utilizamos route param ya que necesitamos acceder a una categoria concreta de coches.
-app.get ('/coches/traccion/:traccion', (req, res) => {
+app.get('/coches/traccion/:traccion', (req, res) => {
     // Ususamos .toLowerCase para que el dato que introduzcamos lo convirtamos a minusculas
     const traccion = req.params.traccion.toLowerCase();
 
@@ -268,32 +319,53 @@ app.get ('/coches/traccion/:traccion', (req, res) => {
     }
     // El codigo 200 le dice al cliente que esta todo OK.
     res.status(200).json(resultado);
-
 });
+
 
 /* FALLO ARREGLADO: He tenido un problema con el extra y era que lo tenia que poner antes de Get /coches/id porque si no lo interpretaria como un id*/
 
+/* ENDPOINTS Coches */
+/* Get /coches/:id/modificaciones */
+// Esto va ha devolver todas las modificaciones que tenga un coche en concreto
+app.get('/coches/:id/modificaciones', (req, res) => {
+    // Recogemos el id del coche y lo convertimos a numero
+    const coche_id = Number(req.params.id);
+    // Primero comprobamos que el coche existe en nuestro array
+    const coche = coches.find(c => c.id === coche_id);
+    // Si el coche no existe no tiene sentido buscar sus modificaciones
+    if (!coche) {
+        return res.status(404).json({ error: 'El coche indicado no existe' });
+    }
+    // Filtramos las modificaciones cuyo coche_id coincida con el que pedimos
+    // Puede devolver 0, 1 o varios resultados
+    const resultado = modificaciones.filter(m => m.coche_id === coche_id);
+    // Esto significa que esta todo OK y le devuelve el resultado
+    res.status(200).json(resultado);
+});
+
+/* ENDPOINTS Coches */
 /* Get /coches/id */
 // Este get va a devolver el coche concreto que tenga ese id.
 // En este caso uso route param porque el id es unico para cada coche, es decir /coches/6 significa ,el coche numero 6.
-app.get ('/coches/:id', (req, res) => {
+app.get('/coches/:id', (req, res) => {
     // Conviertimos el id de la URL a numero, porque los params llegan como texto
-    const id = Number (req.params.id);
+    const id = Number(req.params.id);
     // Buscamos en el array el coche cuyo id coincida con el que le pedimos.
-    const coche = coches.find (c => c.id === id);
+    const coche = coches.find(c => c.id === id);
     // Si no existe ningun coche con ese id devolvemos el error 404.
     if (!coche) {
-        return res.status(404).json({error: 'El coche solicitado no se ha encontrado'});
+        return res.status(404).json({ error: 'El coche solicitado no se ha encontrado' });
     }
 
     // El codigo 200 le dice al cliente que esta todo OK.
-    res.status(200).json(coche)
+    res.status(200).json(coche);
 });
 
+/* ENDPOINTS Coches */
 /* Post /coches */
 // Post crea un nuevo coche y lo añade al array
 // Aqui no usamos ni route params ni query params porq los datos van directamente al body ya que los añadimos
-app.post ('/coches', (req, res) => {
+app.post('/coches', (req, res) => {
     // Para sacar los valores del body para poder utilizarlo directamente aqui sin tener que poner de uno en uno
     const { modelo, carroceria, motor, potencia_cv, precio_euros, traccion, electrificacion, autonomia_km } = req.body;
 
@@ -316,10 +388,11 @@ app.post ('/coches', (req, res) => {
     res.status(201).json(nuevoCoche);
 });
 
+/* ENDPOINTS Coches */
 /* Put /coches/:id */
 // Modifica los datos de un coche que ya existe
 // Usamos route param porque necesitamos identificar exactamente que coche queremos modificar ya que los datos nuevos van directamente al body
-app.put ('/coches/:id', (req, res) => {
+app.put('/coches/:id', (req, res) => {
     // Conviertimos el id de la URL a numero, porque los params llegan como texto
     const id = Number(req.params.id);
     // Buscamos en el array el coche cuyo id coincida con el que le pedimos.
@@ -346,7 +419,7 @@ app.put ('/coches/:id', (req, res) => {
     res.status(200).json(coche);
 });
 
-
+/* ENDPOINTS Coches */
 /* Delete /coches/:id */
 // Elimina un coche del array por su id
 // Usamos route params porq necesitamos identificar exactamente que coche eliminar.
@@ -369,12 +442,14 @@ app.delete('/coches/:id', (req, res) => {
 });
 
 
+
 /* ENDPOINTS Modificaciones */
 /* Get /modificaciones */
 // Devuelve todas las modificaciones del array
 app.get('/modificaciones', (req, res) => {
     res.status(200).json(modificaciones);
 });
+
 
 /* Get /modificaciones/buscar?texto=X */
 //Usamos query param porque estamos haciendo una busqueda por contenido, no hacia un recurso concreto.
@@ -389,7 +464,7 @@ app.get('/modificaciones/buscar', (req, res) => {
     // .filter recorre todo el array y se queda con las que cumplan la condicion que se le marque
     const resultado = modificaciones.filter(m =>
         // Para la condicion "m" hacemos dos cosas, la primera condicion es para confirmar si el tipo de modificacion tiene el texto que buscamos 
-        m.tipo_modificacion.toLowerCase().includes(texto.toLowerCase()) || 
+        m.tipo_modificacion.toLowerCase().includes(texto.toLowerCase()) ||
         // La segunda condicion es si el comentario contiene el texto buscado
         m.comentario.toLowerCase().includes(texto.toLowerCase())
     );
@@ -401,6 +476,7 @@ app.get('/modificaciones/buscar', (req, res) => {
     res.status(200).json(resultado);
 });
 
+
 /* EXTRA Get /modificaciones/top-caballos */
 app.get('/modificaciones/top-caballos', (req, res) => {
     // Hacemos una copia del array original y luego lo ordenamos de mayor a menor, .short compara los dos elementos y los reordena
@@ -408,6 +484,7 @@ app.get('/modificaciones/top-caballos', (req, res) => {
     // Esto significa que esta todo OK y le devuelve el resultado
     res.status(200).json(ranking);
 });
+
 
 /* Get /modificaciones/:id */
 // Este como en los endpoints de coche va despues de las rutas especificas para no tener conflictos entre ellos de que se convierta en id el que no queremos que sea id.
@@ -425,23 +502,6 @@ app.get('/modificaciones/:id', (req, res) => {
     res.status(200).json(modificacion);
 });
 
-/* Get /coches/:id/modificaciones */
-// Esto va ha devolver todas las modificaciones que tenga un coche en concreto
-app.get('/coches/:id/modificaciones', (req, res) => {
-    // Recogemos el id del coche y lo convertimos a numero
-    const coche_id = Number(req.params.id);
-    // Primero comprobamos que el coche existe en nuestro array
-    const coche = coches.find(c => c.id === coche_id);
-    // Si el coche no existe no tiene sentido buscar sus modificaciones
-    if (!coche) {
-        return res.status(404).json({ error: 'El coche indicado no existe' });
-    }
-    // Filtramos las modificaciones cuyo coche_id coincida con el que pedimos
-    // Puede devolver 0, 1 o varios resultados
-    const resultado = modificaciones.filter(m => m.coche_id === coche_id);
-    // Esto significa que esta todo OK y le devuelve el resultado
-    res.status(200).json(resultado);
-});
 
 /* Post /modificaciones  */
 // Crea una nueva modificacion y lo añade al array 
@@ -480,6 +540,7 @@ app.post('/modificaciones', (req, res) => {
     res.status(201).json(nuevaModificacion);
 });
 
+
 /* Delete /modificaciones/:id */
 // Elimina una modificacion del array por su id
 // Usamos route params porq necesitamos identificar exactamente que modificacion eliminar
@@ -501,70 +562,13 @@ app.delete('/modificaciones/:id', (req, res) => {
     res.status(200).json({ mensaje: 'Modificacion eliminada correctamente' });
 });
 
-/* ENDPOINTS Filtros y busquedas */
-/* Get /coches/filtrar */
-// Vamos a filtrar coches por varios campos a la vez usando query params porq los filtros son opcionales 
-// Los query params son perfectos para filtrar por varias cosas ya que esto no forma parte de la identidad del recurso, solo son opciones extra de la busqueda.
-app.get('/coches/filtrar', (req, res) => {
-
-    // Recogemos todos los posibles filtros que puede enviar el usuario
-    const { carroceria, precio_min, precio_max, traccion, electrificacion, ordenar, orden } = req.query;
-
-    // Empezamos con una copia de todos los coches, [...coches] hace una copia para no modificar el array original
-    let resultado = [...coches];
-
-    // Si viene el filtro de carroceria, filtramos por ese campo. .includes() permite busqueda parcial: "SU" tambien encuentra "SUV"
-    if (carroceria) {
-        resultado = resultado.filter(c => c.carroceria.toLowerCase().includes(carroceria.toLowerCase()));
-    }
-
-    // Si viene precio_min, nos quedamos solo con los coches mas caros que ese precio
-    if (precio_min) {
-        resultado = resultado.filter(c => c.precio_euros >= Number(precio_min));
-    }
-
-    // Si viene precio_max, nos quedamos solo con los coches mas baratos que ese precio
-    if (precio_max) {
-        resultado = resultado.filter(c => c.precio_euros <= Number(precio_max));
-    }
-
-    // Si viene traccion, filtramos por ese campo exacto
-    if (traccion) {
-        resultado = resultado.filter(c => c.traccion.toLowerCase() === traccion.toLowerCase());
-    }
-
-    // Si viene electrificacion, filtramos por ese campo exacto
-    if (electrificacion) {
-        resultado = resultado.filter(c => c.electrificacion.toLowerCase() === electrificacion.toLowerCase());
-    }
-
-    // Si viene el campo por el que ordenar, ordenamos el resultado, si orden es descendente ordenamos de mayor a menor, si no de menor a mayor
-    if (ordenar) {
-        resultado.sort((a, b) => {
-            if (orden === 'desc') return b[ordenar] - a[ordenar];
-            return a[ordenar] - b[ordenar];
-        });
-    }
-
-    // Si despues de aplicar todos los filtros no queda ningun coche, devolvemos 404
-    if (resultado.length === 0) {
-        return res.status(404).json({ error: 'No se encontraron coches con esos filtros' });
-    }
-    // Esto significa que esta todo OK y le devuelve el resultado
-    res.status(200).json(resultado);
-});
-
 
 /* He buscado informacion sobre el app.listen y recomiendan ponerlo al final del codigo para que se ejecute todo correctamente */
 
 // Con el codigo de abajo arrancamos el server el cual escucha el puerto que hemos elegido antes 
-app.listen (port, () => {
-    console.log ("¡Servidor iniciado!")
-    console.log ("El servidor esta iniciado en http://localhost:3125") 
+app.listen(port, () => {
+    console.log("¡Servidor iniciado!")
+    console.log("El servidor esta iniciado en http://localhost:3125")
     // Este ultimo console.log lo he introducido porque me parece apropiado para que se sepa claramente cual es el puerto donde esta iniciado el servido
     // para que sea mucho mas facil a la hora de compartir el proyecto con otra persona.
 });
-
-
-
-
