@@ -248,15 +248,12 @@ const modificaciones = [
     }
 ];
 
-
-
 /* ENDPOINTS Coches */
 /* Get /coches */
 // Este get va a devolver todos los coches del array.
 app.get('/coches', (req, res) => {
     res.status(200).json(coches);
 });
-
 
 /* ENDPOINTS Filtros y busquedas */
 /* Get /coches/filtrar */
@@ -302,6 +299,60 @@ app.get('/coches/filtrar', (req, res) => {
     res.status(200).json(resultado);
 });
 
+/* ENDPOINTS Estadisticas y utilidades */
+/* Get /coches/stats/media-precio */
+// Esto devuelve la media de precio de todos los coches del array coches
+app.get('/coches/stats/media-precio', (req, res) => {
+    // Si no hay coches no podemos calcular nada, devolvemos 404
+    if (coches.length === 0) {
+        // Le lanzamos error 404 cuando no haya coches disponibles para calcular
+        return res.status(404).json({ error: 'No hay coches disponibles para calcular la media' });
+    }
+    // .reduce() suma todos los precios uno a uno empezando desde 0
+    const total = coches.reduce((suma, c) => suma + c.precio_euros, 0);
+    // Dividimos el total entre el numero de coches para obtener la media
+    const media = Math.round(total / coches.length);
+    // El codigo 200 le dice al cliente que esta todo OK.
+    res.status(200).json({ media_precio_euros: media });
+});
+
+/* Get /coches/stats/totales */
+// Devuelve el total de coches y de modificaciones que hay en los arrays
+app.get('/coches/stats/totales', (req, res) => {
+    // El codigo 200 le dice al cliente que esta todo OK.
+    res.status(200).json({ // Usamos .length para contar cuantos elementos hay en cada array
+        total_coches: coches.length, 
+        total_modificaciones: modificaciones.length
+    });
+});
+
+/* Get /coches/stats/por-carroceria */
+// Devuelve cuantos coches hay de cada tipo de carroceria
+app.get('/coches/stats/por-carroceria', (req, res) => {
+    // .reduce() recorre el array y va agrupando los coches por carroceria, acc es el objeto acumulador donde guardamos los conteos.
+    const agrupado = coches.reduce((acc, c) => {
+        // Si ya existe esa carroceria en el acumulador sumamos 1, si no la creamos con valor 1.
+        acc[c.carroceria] = (acc[c.carroceria] || 0) + 1;
+        return acc;
+    }, {});
+    // El codigo 200 le dice al cliente que esta todo OK.
+    res.status(200).json(agrupado);
+});
+
+/* Get /coches/stats/top */
+// Devuelve los N coches con mayor potencia, siendo N indicado por query param.
+// Usamos query param porque N es un parametro opcional para realizar las consultas, no identifica un recurso concreto por lo cual nos viene perfecto.
+app.get('/coches/stats/top', (req, res) => {
+    // Recogemos el parametro n, si no viene usamos 3 como valor por defecto.
+    const n = Number(req.query.n) || 3;
+    // Hacemos una copia del array, lo ordenamos de mayor a menor potencia y nos quedamos con los primeros N.
+    const top = [...coches]
+        .sort((a, b) => b.potencia_cv - a.potencia_cv)
+        .slice(0, n);
+    // El codigo 200 le dice al cliente que esta todo OK.
+    res.status(200).json(top);
+});
+
 /* ENDPOINTS Coches */
 /* EXTRA Get /coches/traccion/:traccion */
 // Filtra y devuelve todos los coches segun el tipo de traccion que elijamos 
@@ -324,7 +375,6 @@ app.get('/coches/traccion/:traccion', (req, res) => {
 
 /* FALLO ARREGLADO: He tenido un problema con el extra y era que lo tenia que poner antes de Get /coches/id porque si no lo interpretaria como un id*/
 
-/* ENDPOINTS Coches */
 /* Get /coches/:id/modificaciones */
 // Esto va ha devolver todas las modificaciones que tenga un coche en concreto
 app.get('/coches/:id/modificaciones', (req, res) => {
@@ -343,7 +393,6 @@ app.get('/coches/:id/modificaciones', (req, res) => {
     res.status(200).json(resultado);
 });
 
-/* ENDPOINTS Coches */
 /* Get /coches/id */
 // Este get va a devolver el coche concreto que tenga ese id.
 // En este caso uso route param porque el id es unico para cada coche, es decir /coches/6 significa ,el coche numero 6.
@@ -361,7 +410,6 @@ app.get('/coches/:id', (req, res) => {
     res.status(200).json(coche);
 });
 
-/* ENDPOINTS Coches */
 /* Post /coches */
 // Post crea un nuevo coche y lo añade al array
 // Aqui no usamos ni route params ni query params porq los datos van directamente al body ya que los añadimos
@@ -388,7 +436,7 @@ app.post('/coches', (req, res) => {
     res.status(201).json(nuevoCoche);
 });
 
-/* ENDPOINTS Coches */
+
 /* Put /coches/:id */
 // Modifica los datos de un coche que ya existe
 // Usamos route param porque necesitamos identificar exactamente que coche queremos modificar ya que los datos nuevos van directamente al body

@@ -136,7 +136,14 @@ Cada modificación está vinculada a un coche por `coche_id`.
 | GET | `/modificaciones/buscar?texto=X` | Busca modificaciones por texto |
 | GET | `/modificaciones/top-caballos` | **[EXTRA]** Ranking por caballos ganados |
 
-> En desarrollo.
+### Estadísticas y utilidades
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/coches/stats/media-precio` | Devuelve la media de precio de todos los coches |
+| GET | `/coches/stats/totales` | Devuelve el total de coches y modificaciones |
+| GET | `/coches/stats/por-carroceria` | Cuenta cuántos coches hay de cada tipo de carrocería |
+| GET | `/coches/stats/top?n=X` | Devuelve los X coches con más potencia (por defecto 3) |
 
 ---
 
