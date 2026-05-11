@@ -115,6 +115,27 @@ Cada modificación está vinculada a un coche por `coche_id`.
 | PUT | `/coches/:id` | Modifica un coche existente |
 | DELETE | `/coches/:id` | Elimina un coche |
 
+### Modificaciones *(recurso secundario)*
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/modificaciones` | Devuelve todas las modificaciones |
+| GET | `/modificaciones/:id` | Devuelve una modificación por su id |
+| GET | `/coches/:id/modificaciones` | Devuelve todas las modificaciones de un coche |
+| POST | `/modificaciones` | Crea una nueva modificación |
+| DELETE | `/modificaciones/:id` | Elimina una modificación |
+
+### Filtros y busquedas
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/coches/filtrar?carroceria=X` | Filtra por carrocería (parcial) |
+| GET | `/coches/filtrar?precio_min=X&precio_max=Y` | Filtra por rango de precio |
+| GET | `/coches/filtrar?traccion=X&electrificacion=Y` | Filtra por múltiples campos |
+| GET | `/coches/filtrar?ordenar=precio_euros&orden=asc` | Ordena por campo y dirección |
+| GET | `/modificaciones/buscar?texto=X` | Busca modificaciones por texto |
+| GET | `/modificaciones/top-caballos` | **[EXTRA]** Ranking por caballos ganados |
+
 > En desarrollo.
 
 ---
