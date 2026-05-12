@@ -135,6 +135,7 @@ Cada modificación está vinculada a un coche por `coche_id`.
 | GET | `/coches/filtrar?ordenar=precio_euros&orden=asc` | Ordena por campo y dirección |
 | GET | `/modificaciones/buscar?texto=X` | Busca modificaciones por texto |
 | GET | `/modificaciones/top-caballos` | **[EXTRA]** Ranking por caballos ganados |
+| GET | `/coches/buscar?texto=X` | Busca coches por texto parcial en el nombre del modelo |
 
 ### Estadísticas y utilidades
 

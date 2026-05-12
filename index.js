@@ -255,6 +255,28 @@ app.get('/coches', (req, res) => {
     res.status(200).json(coches);
 });
 
+/* Get /coches/buscar */
+// Buscamos los coches por modelo pero sin necesidad de ponerlo entero.
+// Usamos query param ya que es una busqueda por contenido no a un recurso concreto.
+app.get('/coches/buscar', (req, res) => {
+    // req.query.texto guarda en la variable txto lo que viene despues de ?.
+    const texto = req.query.texto;
+    // Si no se introduce ningun texto devolvemos error 400.
+    if (!texto) {
+        return res.status(400).json({ error: 'Debes indicar el modelo que quieres buscar(al menos algo), vuelva a intentarlo' });
+    }
+    // .filter() recorre el array y devuelve los coches cuyo modelo contenga el texto buscado.
+    const resultado = coches.filter(c => // .toLowerCase para que en la busqueda no distinga entre mayusculas o minusculas.
+        c.modelo.toLowerCase().includes(texto.toLowerCase())
+    );
+    // Si no hay resultados devolvemos 404
+    if (resultado.length === 0) {
+        return res.status(404).json({ error: 'No se encontraron coches con ese texto' });
+    }
+    // El codigo 200 le dice al cliente que esta todo OK.
+    res.status(200).json(resultado);
+})
+
 /* ENDPOINTS Filtros y busquedas */
 /* Get /coches/filtrar */
 // Vamos a filtrar coches por varios campos a la vez usando query params porq los filtros son opcionales 
