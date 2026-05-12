@@ -150,4 +150,5 @@ Cada modificación está vinculada a un coche por `coche_id`.
 
 ## Colección Bruno
 
-> Pendiente.
+Importa el archivo `api-audi-2026.yml` desde Bruno para tener todas las peticiones listas.
+Incluye una peticion por cada endpoint con sus parametros y bodies ya configurados.

@@ -1,0 +1,319 @@
+opencollection: 1.0.0
+info:
+  name: API Audi 2026
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ''
+      port: ''
+      auth:
+        username: ''
+        password: ''
+      bypassProxy: ''
+items:
+  - info:
+      name: Obtener todos los coches
+      type: http
+      seq: 5
+    http:
+      method: GET
+      url: http://localhost:3125/coches
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Buscar coche por texto
+      type: http
+      seq: 6
+    http:
+      method: GET
+      url: http://localhost:3125/coches/buscar?texto=RS
+      params:
+        - name: texto
+          value: RS
+          type: query
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Filtrar coches
+      type: http
+      seq: 7
+    http:
+      method: GET
+      url: http://localhost:3125/coches/filtrar?carroceria=SUV
+      params:
+        - name: carroceria
+          value: SUV
+          type: query
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Media de precio
+      type: http
+      seq: 8
+    http:
+      method: GET
+      url: http://localhost:3125/coches/stats/media-precio
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Totales
+      type: http
+      seq: 9
+    http:
+      method: GET
+      url: http://localhost:3125/coches/stats/totales
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Por carroceria
+      type: http
+      seq: 10
+    http:
+      method: GET
+      url: http://localhost:3125/coches/stats/por-carroceria
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Top potencia
+      type: http
+      seq: 11
+    http:
+      method: GET
+      url: http://localhost:3125/coches/stats/top?n=3
+      params:
+        - name: 'n'
+          value: '3'
+          type: query
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Coches por traccion
+      type: http
+      seq: 12
+    http:
+      method: GET
+      url: http://localhost:3125/coches/traccion/quattro
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Modificaciones de un coche
+      type: http
+      seq: 13
+    http:
+      method: GET
+      url: http://localhost:3125/coches/1/modificaciones
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Obtener coche por id
+      type: http
+      seq: 14
+    http:
+      method: GET
+      url: http://localhost:3125/coches/1
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Crear coche
+      type: http
+      seq: 15
+    http:
+      method: POST
+      url: http://localhost:3125/coches
+      body:
+        type: json
+        data: |-
+          {
+              "modelo": "Audi TT Coupe",
+              "carroceria": "Coupe",
+              "motor": "2.0 TFSI",
+              "potencia_cv": 230,
+              "precio_euros": 55000,
+              "traccion": "FWD",
+              "electrificacion": "ninguna",
+              "autonomia_km": 0
+          }
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Editar coche
+      type: http
+      seq: 16
+    http:
+      method: PUT
+      url: http://localhost:3125/coches/1
+      body:
+        type: json
+        data: |-
+          {
+              "potencia_cv": 170,
+              "precio_euros": 35500
+          }
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Eliminar coche
+      type: http
+      seq: 17
+    http:
+      method: DELETE
+      url: http://localhost:3125/coches/1
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Obtener todas las modificaciones
+      type: http
+      seq: 18
+    http:
+      method: GET
+      url: http://localhost:3125/modificaciones
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Buscar modificación por texto
+      type: http
+      seq: 19
+    http:
+      method: GET
+      url: http://localhost:3125/modificaciones/buscar?texto=Stage
+      params:
+        - name: texto
+          value: Stage
+          type: query
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Top caballos
+      type: http
+      seq: 20
+    http:
+      method: GET
+      url: http://localhost:3125/modificaciones/top-caballos
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Obtener modificación por id
+      type: http
+      seq: 21
+    http:
+      method: GET
+      url: http://localhost:3125/modificaciones/1
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Crear modificación
+      type: http
+      seq: 22
+    http:
+      method: POST
+      url: http://localhost:3125/modificaciones
+      body:
+        type: json
+        data: |-
+          {
+              "coche_id": 1,
+              "autor": "Manuel M.",
+              "taller": "TuningPro Sevilla",
+              "potencia_original_cv": 150,
+              "potencia_modificada_cv": 195,
+              "tipo_modificacion": "Stage 1",
+              "comentario": "Muy contento con el resultado, se nota muchisimo el empuje",
+              "fecha": "2026-05-13"
+          }
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+  - info:
+      name: Eliminar modificación
+      type: http
+      seq: 23
+    http:
+      method: DELETE
+      url: http://localhost:3125/modificaciones/1
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+bundled: true
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    exportedAt: '2026-05-12T22:49:42.226Z'
+    exportedUsing: Bruno
