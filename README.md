@@ -152,3 +152,33 @@ Cada modificación está vinculada a un coche por `coche_id`.
 
 Importa el archivo `api-audi-2026.yml` desde Bruno para tener todas las peticiones listas.
 Incluye una peticion por cada endpoint con sus parametros y bodies ya configurados.
+Añadido ademas errores forzados para la comprobación de errores, ademas de la comprobacion del error 500.
+
+---
+
+## Frontend 
+
+Se ha desarrollado una interfaz web en HTML, CSS y JavaScript vanilla que consume la API directamente desde el navegador.
+
+### Cómo usarlo
+
+1. Arranca el servidor con `node index.js`
+
+> El servidor tiene que estar arrancado para que el frontend funcione.
+
+### Funcionalidades
+
+| Funcionalidad | Método que usa |
+|---------------|----------------|
+| Ver todos los coches | GET `/coches` |
+| Buscar coche por nombre | GET `/coches/buscar?texto=X` |
+| Crear un nuevo coche | POST `/coches` |
+| Eliminar un coche por id | DELETE `/coches/:id` |
+| Ver total de coches y modificaciones | GET `/coches/stats/totales` |
+
+### Tecnologías usadas
+
+- **HTML** — estructura de la página
+- **CSS** — estilos visuales con colores corporativos de Audi
+- **JavaScript (fetch + async/await)** — llamadas a la API desde el navegador
+- **CORS** — configurado en el servidor para permitir las peticiones desde el frontend

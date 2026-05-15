@@ -1,6 +1,10 @@
 /* CONFIGURACION DEL SERVIDOR */
 const express = require ('express'); // Importamos express para poder crear el servidor.
 const app = express(); // guardamos express en una constante la que llamamos app.
+
+/* Para poder añadir el html del punto 5 opcional he tenido que instalar el paquete de cors con npm install cors en la consola */
+const cors = require('cors'); // Importamos cors para permitir peticiones desde el navegador
+app.use(cors()); // Activamos cors para que el frontend pueda comunicarse con la API
 const port = 3125; // Puerto que he definido para el proyecto.
 
 
@@ -632,6 +636,19 @@ app.delete('/modificaciones/:id', (req, res) => {
     res.status(200).json({ mensaje: 'Modificacion eliminada correctamente' });
 });
 
+/* ENDPOINT para la prueba del error 500 */
+app.get('/error-prueba', (req, res, next) => {
+    next(new Error('Error 500 prueba'));
+});
+
+/* ERORR 500 */
+// Esto captura cualquier error que ocurra en el servidor, esto se activa automaticamente cuando en algun endpoint se llama a next (error).
+app.use((err, req, res, next) => {
+    // Mostramos el error en la consola para que el desarrollador pueda verlo
+    console.error('Error inesperado:', err.message);
+    // Respondemos al cliente con 500 y un mensaje.
+    res.status(500).json({ error: 'Error interno del servidor, intentelo de nuevo mas tarde' });
+});
 
 /* He buscado informacion sobre el app.listen y recomiendan ponerlo al final del codigo para que se ejecute todo correctamente */
 

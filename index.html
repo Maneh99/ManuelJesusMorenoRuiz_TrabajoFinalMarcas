@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>API Audi 2026</title>
+    <link rel="icon" type="image/png" href="img/audi-logo.png"> <!-- Para que el logo de audi tambien aparezca en el tirulo de la pagina -->
+    <style> 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2d2d2d;
+            color: #f0f0f0;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #bb0a1e;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            color: #bb0a1e;
+            font-size: 1.2rem;
+            margin: 25px 0 10px 0;
+            border-left: 4px solid #bb0a1e;
+            padding-left: 10px;
+        }
+
+        button {
+            background-color: #bb0a1e;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #8f0716;
+        }
+
+        input {
+            background-color: #2a2a2a;
+            color: #f0f0f0;
+            border: 1px solid #444;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 3px 3px 3px 0;
+            font-size: 0.9rem;
+            width: 180px;
+        }
+
+        input::placeholder {
+            color: #888;
+        }
+
+        ul {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        ul li {
+            background-color: #2a2a2a;
+            border-left: 3px solid #bb0a1e;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        p {
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        .seccion {
+            background-color: #1f1f1f;;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .ok {
+            color: #4caf50;
+        }
+
+        .error {
+            color: #bb0a1e;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #333;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+    <img src="img/audi-logo.png"  
+         alt="Logo Audi" 
+         style="height: 40px; vertical-align: middle; margin-right: 10px; filter: brightness(0) invert(1);">
+    API Audi 2026
+    </h1>
+    <hr>
+
+    <!-- Estadisticas -->
+    <div class="seccion">
+        <h2>Totales</h2>
+        <button onclick="cargarTotales()">Ver totales</button>
+        <p id="totales"></p>
+    </div>
+
+    <!-- Ver todos los coches -->
+    <div class="seccion">
+        <h2>Todos los coches</h2>
+        <button onclick="cargarCoches()">Cargar coches</button>
+        <ul id="lista-coches"></ul>
+    </div>
+
+    <!-- Buscar coche -->
+    <div class="seccion">
+        <h2>Buscar coche por nombre</h2>
+        <input type="text" id="input-buscar" placeholder="Ej: RS3">
+        <button onclick="buscarCoche()">Buscar</button>
+        <ul id="lista-buscar"></ul>
+    </div>
+
+    <!-- Crear coche -->
+    <div class="seccion">
+        <h2>Crear coche</h2>
+        <input type="text" id="modelo" placeholder="Modelo">
+        <input type="text" id="carroceria" placeholder="Carrocería">
+        <input type="text" id="motor" placeholder="Motor">
+        <input type="number" id="potencia_cv" placeholder="Potencia CV">
+        <input type="number" id="precio_euros" placeholder="Precio €">
+        <input type="text" id="traccion" placeholder="Tracción">
+        <input type="text" id="electrificacion" placeholder="Electrificación">
+        <input type="number" id="autonomia_km" placeholder="Autonomía KM">
+        <br>
+        <button onclick="crearCoche()">Crear coche</button>
+        <p id="resultado-crear"></p>
+    </div>
+
+    <!-- Eliminar coche -->
+    <div class="seccion">
+        <h2>Eliminar coche</h2>
+        <input type="number" id="id-eliminar" placeholder="ID del coche">
+        <button onclick="eliminarCoche()">Eliminar</button>
+        <p id="resultado-eliminar"></p>
+    </div>
+
+    <script>
+        const BASE = 'http://localhost:3125'; // Para que reciba los datos 
+
+        /* FUNCIONES ASYNC: Esto no lo hemos visto en clase pero he estado buscando info de como se implementa para hacer la pagina y asi es como lo he echo */
+
+        /* Ver totales */
+        // async significa que la funcion puede esperar la respuesta sin que la pagina se bloquee
+        async function cargarTotales() {
+            // fetch() hace una peticion GET a la API, seria como abrir la URL desde JavaScript
+            // await significa a que espere a que la API responda antes de continuar.
+            const res = await fetch(`${BASE}/coches/stats/totales`);
+            // La API responde en formato JSON, con esto lo convertimos en un array y lo guardamos en una constante
+            const data = await res.json();
+            document.getElementById('totales').textContent =
+                `Coches: ${data.total_coches} | Modificaciones: ${data.total_modificaciones}`;
+        }
+
+        /* Ver todos los coches */
+        async function cargarCoches() {
+            // fetch() hace una peticion GET a la API, seria como abrir la URL desde JavaScript
+            // await significa a que espere a que la API responda antes de continuar.
+            const res = await fetch(`${BASE}/coches`);
+            // La API responde en formato JSON, con esto lo convertimos en un array y lo guardamos en una constante
+            const data = await res.json();
+            // Buscamos en el HTML el elemento 'ul' donde vamos a mostrar los coches
+            const lista = document.getElementById('lista-coches');
+            // Vaciamos la lista
+            lista.innerHTML = '';
+            data.forEach(c => {
+                // Creamos el elemento 'li' 
+                const li = document.createElement('li');
+                // Le ponemos el texto que queremos mostrar
+                // Las comillas invertidas `` permiten meter variables dentro del texto con ${}
+                li.textContent = `[${c.id}] ${c.modelo} — ${c.potencia_cv}cv — ${c.precio_euros}€`;
+                // Añadimos el <li> dentro del <ul> para que aparezca en pantalla
+                lista.appendChild(li);
+            });
+        }
+
+        /* Buscar coche por texto */
+        async function buscarCoche() {
+            // Guardamos lo que el usuario ha introducido a traves del input en una variable
+            const texto = document.getElementById('input-buscar').value;
+            // Hacemos la peticion GET a la API pasando el texto como query param
+            const res = await fetch(`${BASE}/coches/buscar?texto=${texto}`);
+            // Convertimos la respuesta a JSON
+            const data = await res.json();
+            // Buscamos la lista donde mostrar los resultados
+            const lista = document.getElementById('lista-buscar');
+            // Vaciamos la lista antes de mostrar los nuevos resultados
+            lista.innerHTML = '';
+            if (res.ok) { //res.ok true si el codigo que nos devuielve es 200, false si es 404 o 400
+                // Si ha ido bien mostramos los coches encontrados igual que en cargarCoches()
+                data.forEach(c => {
+                    const li = document.createElement('li');
+                    li.textContent = `[${c.id}] ${c.modelo} — ${c.potencia_cv}cv — ${c.precio_euros}€`;
+                    lista.appendChild(li);
+                });
+            } else {
+                // Si ha fallado mostramos el mensaje de error que devuelve la API
+                // class="error" le aplica el color rojo del CSS
+                lista.innerHTML = `<li class="error">${data.error}</li>`;
+            }
+        }
+
+        /* Crear coche */
+        async function crearCoche() {
+            // Construimos el objeto con los datos que ha rellenado el usuario en el formulario
+            // document.getElementById('modelo').value recoge el texto del input con id="modelo"
+            // Number() convierte el texto a numero porque los inputs siempre devuelven texto
+            const nuevoCoche = {
+                modelo: document.getElementById('modelo').value,
+                carroceria: document.getElementById('carroceria').value,
+                motor: document.getElementById('motor').value,
+                potencia_cv: Number(document.getElementById('potencia_cv').value),
+                precio_euros: Number(document.getElementById('precio_euros').value),
+                traccion: document.getElementById('traccion').value,
+                electrificacion: document.getElementById('electrificacion').value,
+                autonomia_km: Number(document.getElementById('autonomia_km').value)
+            };
+            // Hacemos la peticion POST a la API con el objeto que acabamos de construir
+            const res = await fetch(`${BASE}/coches`, {
+                method: 'POST', // Indicamos que es una peticion POST, no GET
+                headers: { 'Content-Type': 'application/json' }, // Le decimos a la API que le mandamos JSON
+                body: JSON.stringify(nuevoCoche) // Convertimos el objeto JavaScript a texto JSON para enviarlo
+            });
+            // Convertimos la respuesta a JSON
+            const data = await res.json();
+            // Buscamos el parrafo donde mostrar el mensaje de resultado
+            const msg = document.getElementById('resultado-crear');
+            if (res.ok) {
+                // Si se ha creado bien (201) aplicamos la clase CSS "ok" que pone el texto en verde
+                msg.className = 'ok';
+                msg.textContent = `Coche creado correctamente con id ${data.id}`;
+            } else {
+                // Si ha fallado (400 o 404) aplicamos la clase CSS "error" que pone el texto en rojo
+                msg.className = 'error';
+                msg.textContent = `Error: ${data.error}`;
+            }
+        }
+
+        /* Eliminar coche */
+
+        async function eliminarCoche() {
+            // Recogemos el id que ha escrito el usuario en el input
+            const id = document.getElementById('id-eliminar').value;
+
+            // Buscamos el parrafo donde mostrar el resultado
+            const msg = document.getElementById('resultado-eliminar');
+
+            // Si el input esta vacio mostramos el error directamente sin llamar a la API
+            if (!id) {
+                msg.className = 'error';
+                msg.textContent = 'Error: Debes introducir el ID del coche que quieres eliminar';
+                return; // return corta la funcion aqui, no continua hacia abajo
+            }
+
+            // Hacemos la peticion DELETE a la API con el id en la URL
+            const res = await fetch(`${BASE}/coches/${id}`, {
+                method: 'DELETE' // Indicamos que es una peticion DELETE
+            });
+
+            // Convertimos la respuesta a JSON
+            const data = await res.json();
+
+            if (res.ok) {
+                // Si se ha eliminado bien mostramos el mensaje en verde
+                msg.className = 'ok';
+                msg.textContent = `${data.mensaje}`;
+            } else {
+                // Si ha fallado 404 mostramos el error en rojo
+                msg.className = 'error';
+                msg.textContent = `Error: ${data.error}`;
+            }
+        }
+
+    </script>
+
+</body>
+</html>
